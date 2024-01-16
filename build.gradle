@@ -7,9 +7,11 @@ plugins {
 loom {
     silentMojangMappingsLicense()
 	forge {
-		mixinConfigs = []
+		mixinConfigs = [
+			"cavebiomeapi_embeddiumcompat.mixins.json"
+		]
 	}
-	mixin.defaultRefmapName = "embeddium-refmap.json"
+	mixin.defaultRefmapName = "cavebiomeapi_embeddiumcompat.refmap.json"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
