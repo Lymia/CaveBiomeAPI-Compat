@@ -3,7 +3,8 @@
   "minVersion": "0.8",
   "package": "moe.lymia.cavebiomescompat.mixins",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "cavebiomeapi_embeddiumcompat.refmap.json",
+  "refmap": "cavebiomeapi_compat.refmap.json",
+  "plugin": "moe.lymia.cavebiomescompat.mixins.ConfigPlugin",
   "client": [
     "BiomeColorsMixin"
   ],

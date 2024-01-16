@@ -8,10 +8,10 @@ loom {
     silentMojangMappingsLicense()
 	forge {
 		mixinConfigs = [
-			"cavebiomeapi_embeddiumcompat.mixins.json"
+			"cavebiomeapi_compat.mixins.json"
 		]
 	}
-	mixin.defaultRefmapName = "cavebiomeapi_embeddiumcompat.refmap.json"
+	mixin.defaultRefmapName = "cavebiomeapi_compat.refmap.json"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -124,7 +124,7 @@ jar {
 def copyJarNameConsistent = tasks.register('copyJarNameConsistent', Copy) {
 	from remapJar // shortcut for createJar.outputs.files
 	into project.file("build/libs")
-	rename { name -> "CaveBiomeAPI_Embeddium_Compat-latest.jar" }
+	rename { name -> "CaveBiomeAPICompat-latest.jar" }
 }
 
 def copyJarToBin = tasks.register('copyJarToBin', Copy) {
@@ -169,5 +169,5 @@ publishMods {
 		minecraftVersions.add(project.minecraft_version)
 	}
 
-	displayName = "CaveBiomeAPI/Embeddium Compat Patch ${project.mod_version}"
+	displayName = "CaveBiomeAPI Compat v${project.mod_version}"
 }

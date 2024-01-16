@@ -1,5 +1,6 @@
 package moe.lymia.cavebiomescompat.mixins;
 
+import net.minecraftforge.fml.ModList;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -19,8 +20,13 @@ public class ConfigPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public boolean shouldApplyMixin(String s, String s1) {
-        return false;
+    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        switch (mixinClassName) {
+            case "moe.lymia.cavebiomescompat.mixin.BiomeColorsMixin":
+                return ModList.get().getModContainerById("embeddium").isPresent();
+            default:
+                throw new RuntimeException("unknown mixin: "+mixinClassName);
+        }
     }
 
     @Override

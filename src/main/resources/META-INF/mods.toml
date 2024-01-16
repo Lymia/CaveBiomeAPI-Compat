@@ -1,37 +1,37 @@
 modLoader = "javafml"
 loaderVersion = "[32,)"
-issueTrackerURL = "https://github.com/Lymia/CaveBiomeAPI-EmbeddiumCompat/issues"
+issueTrackerURL = "https://github.com/Lymia/CaveBiomeAPI-Compat/issues"
 license = "LGPL-3.0"
 
 [[mods]]
-    modId = "cavebiomeapi-embeddiumcompat"
+    modId = "cavebiomeapi-compat"
     version = "${version}"
     authors = "Lymia Kanokawa"
-    displayName = "CaveBiomeAPI (Embeddium Compat)"
-    description = '''This mod adds compatibility between CaveBiomeAPI and Embeddium.'''
+    displayName = "CaveBiomeAPI Compat"
+    description = '''This mod adds compatibility between CaveBiomeAPI and multiple modern mods.'''
 
-[[dependencies.cavebiomeapi-embeddiumcompat]]
+[[dependencies.cavebiomeapi-compat]]
     modId = "forge"
     mandatory = true
     versionRange = "[36,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.cavebiomeapi-embeddiumcompat]]
+[[dependencies.cavebiomeapi-compat]]
     modId = "minecraft"
     mandatory = true
     versionRange = "[1.16.5,1.17)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.cavebiomeapi-embeddiumcompat]]
+[[dependencies.cavebiomeapi-compat]]
     modId="cavebiomeapi"
     mandatory=true
     versionRange = "[1,)"
     ordering="BEFORE"
     side="BOTH"
 
-[[dependencies.cavebiomeapi-embeddiumcompat]]
+[[dependencies.cavebiomeapi-compat]]
     modId="embeddium"
     mandatory=false
     versionRange = "[0,)"
