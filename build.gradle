@@ -1,98 +1,171 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-//        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
+plugins {
+	id 'dev.architectury.loom' version '1.4.380'
+	id 'maven-publish'
+	id "me.modmuss50.mod-publish-plugin" version "0.3.4"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: "eclipse"
-apply plugin: "maven-publish"
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, "${project.modId}.refmap.json"
+loom {
+    silentMojangMappingsLicense()
+	forge {
+		mixinConfigs = []
+	}
+	mixin.defaultRefmapName = "embeddium-refmap.json"
 }
 
-group = 'com.blackgear'
-version = "${project.minecraft}-${project.modVersion}"
-archivesBaseName = project.modId
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
+archivesBaseName = project.archives_base_name
+version = "${project.mod_version}+mc${project.minecraft_version}"
+group = project.maven_group
 
-minecraft {
-    mappings channel: project.mappingsChannel, version: project.mappings
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+sourceSets {
+	compat {
+		java {
+			compileClasspath += main.compileClasspath
+			compileClasspath += main.output
+		}
+	}
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=" + project.modId + ".mixins.json"
-            mods {
-                cavebiomeapi {
-                    source sourceSets.main
-                }
-            }
-        }
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=" + project.modId + ".mixins.json"
-            mods {
-                cavebiomeapi {
-                    source sourceSets.main
-                }
-            }
-        }
+	main {
+		java {
+			runtimeClasspath += compat.output
+		}
+	}
+}
 
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-//            property 'mixin.env.disableRefMap', 'true'
-            property "mixin.env.remapRefMap", "true"
-            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
-            args '--mod', 'cavebiomeapi', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            mods {
-                cavebiomeapi {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+loom {
+	createRemapConfigurations(sourceSets.compat)
+}
+
+repositories {
+	maven {
+		url "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+    	}
+  	}
+}
+
+def extraModsDir = "extra-mods-${project.minecraft_version}"
+
+repositories {
+	exclusiveContent {
+		forRepository {
+			flatDir {
+				name "extra-mods"
+				dir file(extraModsDir)
+			}
+		}
+		filter {
+			includeGroup "extra-mods"
+		}
+	}
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.minecraft}-${project.forge}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("curse.maven:biomes-o-plenty-220318:3300293")
+    modImplementation "curse.maven:cavebiomeapi-441706:3519248"
+    modImplementation "curse.maven:embeddium-908741:5034463"
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+	// runtime remapping at home
+	for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
+		def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
+		def versionSep = basename.lastIndexOf('-')
+		assert versionSep != -1
+		def artifactId = basename.substring(0, versionSep)
+		def version = basename.substring(versionSep + 1)
+		modRuntimeOnly("extra-mods:$artifactId:$version")
+	}
 }
 
-repositories{
-    maven { url = "https://www.cursemaven.com" }
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+
+	def targetVersion = 8
+	if (JavaVersion.current().isJava9Compatible()) {
+		 it.options.release = targetVersion
+	}
+}
+
+
+java {
+	withSourcesJar()
 }
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : project.modName,
-                "Specification-Vendor"    : "BlackGear27",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.modName,
-                "Implementation-Version"  : project.modVersion,
-                "Implementation-Vendor"   : "BlackGear27",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : project.modId + ".mixins.json"
-        ])
-    }
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
+	from sourceSets.compat.output.classesDirs
+	from sourceSets.compat.output.resourcesDir
+}
+
+def copyJarNameConsistent = tasks.register('copyJarNameConsistent', Copy) {
+	from remapJar // shortcut for createJar.outputs.files
+	into project.file("build/libs")
+	rename { name -> "CaveBiomeAPI_Embeddium_Compat-latest.jar" }
+}
+
+def copyJarToBin = tasks.register('copyJarToBin', Copy) {
+	from remapJar // shortcut for createJar.outputs.files
+	into rootProject.file("bin")
+	mustRunAfter "copyJarNameConsistent"
+}
+
+tasks.named("remapSourcesJar") {
+	mustRunAfter "copyJarNameConsistent"
+}
+
+tasks.build.dependsOn(copyJarToBin, copyJarNameConsistent)
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+			artifact(remapSourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			url "file://${System.getenv("local_maven")}"
+		}
+	}
+}
+
+publishMods {
+	file = remapJar.archiveFile
+	type = STABLE
+	modLoaders.add("forge")
+
+	curseforge {
+		projectId = "962879"
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		minecraftVersions.add(project.minecraft_version)
+	}
+
+	displayName = "CaveBiomeAPI/Embeddium Compat Patch ${project.mod_version}"
 }

@@ -1,27 +1,11 @@
 modLoader = "javafml"
 loaderVersion = "[32,)"
-issueTrackerURL = "https://github.com/ItsBlackGear/CaveBiomeAPI/issues"
+issueTrackerURL = "https://github.com/Lymia/CaveBiomeAPI-EmbeddiumCompat/issues"
 license = "LGPL-3.0"
 
 [[mods]]
-    modId = "cavebiomeapi"
-    version = "1.3.1"
-    logoFile = "cavebiomes.png"
-    authors = "BlackGear27"
-    credits = "BlackGear27, TelepathicGrunt, CorgiTaco"
-    displayName = "CaveBiomeAPI"
-    description = '''This mod allows developers to add actual underground biomes to give more life to the depths of our beloved worlds!'''
-
-[[dependencies.cavebiomeapi]]
-    modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.16.5,1.17)"
-    ordering = "AFTER"
-    side = "BOTH"
-
-[[dependencies.cavebiomeapi]]
-    modId = "forge"
-    mandatory = true
-    versionRange="[36.1.0,)"
-    ordering = "NONE"
-    side = "BOTH"
+    modId = "cavebiomeapi-embeddiumcompat"
+    version = "${version}"
+    authors = "Lymia Kanokawa"
+    displayName = "CaveBiomeAPI (Embeddium Compat)"
+    description = '''This mod adds compatibility between CaveBiomeAPI and Embeddium.'''

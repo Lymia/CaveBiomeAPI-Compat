@@ -1,1 +1,12 @@
-rootProject.name = 'cavebiomes'
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+		maven { url "https://maven.architectury.dev/" }
+		maven { url "https://files.minecraftforge.net/maven/" }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
