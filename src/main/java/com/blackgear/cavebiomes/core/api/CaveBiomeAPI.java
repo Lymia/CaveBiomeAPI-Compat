@@ -1,6 +1,5 @@
 package com.blackgear.cavebiomes.core.api;
 
-import com.blackgear.cavebiomes.core.CBAConfig;
 import com.google.common.base.Preconditions;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesObjects;
@@ -8,8 +7,6 @@ import moe.lymia.simplecavebiomes.world.CaveBiomeProvider;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.Category;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraftforge.common.BiomeDictionary;
 
 public final class CaveBiomeAPI {
@@ -26,7 +23,7 @@ public final class CaveBiomeAPI {
 
     @Deprecated
     public synchronized static Biome injectCaveBiomes(Biome surfaceBiomes, int x, int y, int z) {
-        return CAVE_BIOMES.getBiome(surfaceBiomes, x, y, z);
+        return CAVE_BIOMES.filterCaveBiome(surfaceBiomes, x, y, z);
     }
 
     /**

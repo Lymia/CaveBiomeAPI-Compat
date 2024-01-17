@@ -12,9 +12,13 @@ public final class CaveBiomeProvider {
         this.caveBiomeSource = SimpleCaveBiomesAPI.createNoise(biomes, seed);
     }
 
-    public Biome getBiome(Biome surfaceBiome, int x, int y, int z) {
+    public Biome getCaveBiome(int x, int y, int z) {
+        return caveBiomeSource.getBiomeForNoiseGen(x, y, z);
+    }
+
+    public Biome filterCaveBiome(Biome surfaceBiome, int x, int y, int z) {
         if ((float)y <= 12.0F + surfaceBiome.getDepth() * 4.0F && y >= 1) {
-            Biome caveBiomes = caveBiomeSource.getBiomeForNoiseGen(x, y, z);
+            Biome caveBiomes = getCaveBiome(x, y, z);
             if (caveBiomes.getCategory() != Biome.Category.EXTREME_HILLS) {
                 return caveBiomes;
             }

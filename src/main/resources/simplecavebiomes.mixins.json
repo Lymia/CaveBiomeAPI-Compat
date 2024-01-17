@@ -6,7 +6,7 @@
   "refmap": "cavebiomeapi_compat.refmap.json",
   "plugin": "moe.lymia.simplecavebiomes.mixins.ConfigPlugin",
   "mixins": [
-    "OTGBiomeProviderHook",
+    "BiomeSourceHook",
     "OTGChunkGeneratorHook"
   ],
   "injectors": {
