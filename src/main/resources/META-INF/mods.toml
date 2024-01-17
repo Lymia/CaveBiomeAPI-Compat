@@ -1,39 +1,32 @@
 modLoader = "javafml"
 loaderVersion = "[32,)"
-issueTrackerURL = "https://github.com/Lymia/CaveBiomeAPI-Compat/issues"
+issueTrackerURL = "https://github.com/Lymia/SimpleCaveBiomes/issues"
 license = "LGPL-3.0"
 
 [[mods]]
-    modId = "cavebiomeapi-compat"
+    modId = "simplecavebiomes"
     version = "${version}"
     authors = "Lymia Kanokawa"
-    displayName = "CaveBiomeAPI Compat"
-    description = '''This mod adds compatibility between CaveBiomeAPI and multiple modern mods.'''
+    displayName = "SimpleCaveBiomes"
+    description = '''An alternative mod for cave biomes on 1.16'''
 
-[[dependencies.cavebiomeapi-compat]]
+[[dependencies.simplecavebiomes]]
     modId = "forge"
     mandatory = true
     versionRange = "[36,)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.cavebiomeapi-compat]]
+[[dependencies.simplecavebiomes]]
     modId = "minecraft"
     mandatory = true
     versionRange = "[1.16.5,1.17)"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.cavebiomeapi-compat]]
-    modId="cavebiomeapi"
-    mandatory=true
-    versionRange = "[1,)"
-    ordering="BEFORE"
-    side="BOTH"
-
-[[dependencies.cavebiomeapi-compat]]
-    modId="embeddium"
-    mandatory=false
-    versionRange = "[0,)"
-    ordering="BEFORE"
-    side="CLIENT"
+[[mods]]
+    modId = "cavebiomeapi"
+    version = "1.4.2"
+    authors = "Lymia Kanokawa"
+    displayName = "SimpleCaveBiomes (CaveBiomeAPI Compat)"
+    description = '''The compatibility library to allow SimpleCaveBiomes to be used in place of CaveBiomeAPI'''

@@ -1,4 +1,4 @@
-package moe.lymia.cavebiomescompat.mixins;
+package moe.lymia.simplecavebiomes.mixins;
 
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.util.math.BlockPos;

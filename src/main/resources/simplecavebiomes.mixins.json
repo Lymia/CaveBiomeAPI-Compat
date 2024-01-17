@@ -1,12 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "moe.lymia.cavebiomescompat.mixins",
+  "package": "moe.lymia.simplecavebiomes.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "cavebiomeapi_compat.refmap.json",
-  "plugin": "moe.lymia.cavebiomescompat.mixins.ConfigPlugin",
+  "plugin": "moe.lymia.simplecavebiomes.mixins.ConfigPlugin",
   "client": [
     "BiomeColorsMixin"
+  ],
+  "mixins": [
+    "OTGBiomeProviderHook",
+    "OTGChunkGeneratorHook"
   ],
   "injectors": {
     "defaultRequire": 1
