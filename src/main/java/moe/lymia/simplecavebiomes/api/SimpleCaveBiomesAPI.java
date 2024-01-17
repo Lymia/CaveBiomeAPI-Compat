@@ -1,12 +1,12 @@
 package moe.lymia.simplecavebiomes.api;
 
-import com.blackgear.cavebiomes.mixin.NetherBiomeProviderAccessor;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import moe.lymia.simplecavebiomes.CaveBiomeAPICompat;
+import moe.lymia.simplecavebiomes.mixins.MultiNoiseBiomeSourceAccessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -84,8 +84,8 @@ public final class SimpleCaveBiomesAPI {
         MultiNoiseBiomeSource.NoiseParameters humidity = createParams(-7, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0);
         MultiNoiseBiomeSource.NoiseParameters altitude = createParams(-9, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0);
         MultiNoiseBiomeSource.NoiseParameters weirdness = createParams(-7, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0);
-        return NetherBiomeProviderAccessor.createMultiNoiseBiomeSource(seed, caveBiomes, temperature, humidity,
-                altitude, weirdness, Optional.empty());
+        return MultiNoiseBiomeSourceAccessor.create(seed, caveBiomes, temperature, humidity, altitude, weirdness,
+                Optional.empty());
     }
 
     private static MultiNoiseBiomeSource.NoiseParameters createParams(int firstOctave, double... amplitudes) {

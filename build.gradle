@@ -77,10 +77,6 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    modImplementation "curse.maven:cavebiomeapi-441706:3519248"
-    modImplementation "curse.maven:embeddium-908741:5034463"
-	modImplementation "curse.maven:open-terrain-generator-265894:3570875"
-
 	// runtime remapping at home
 	for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
 		def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
