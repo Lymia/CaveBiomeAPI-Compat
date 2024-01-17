@@ -21,15 +21,7 @@ public class ConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        switch (mixinClassName) {
-            case "moe.lymia.cavebiomescompat.mixins.BiomeColorsMixin":
-                return LoadingModList.get().getModFileById("embeddium") != null;
-            case "moe.lymia.cavebiomescompat.mixins.OTGBiomeProviderHook":
-            case "moe.lymia.cavebiomescompat.mixins.OTGChunkGeneratorHook":
-                return LoadingModList.get().getModFileById("otg") != null;
-            default:
-                throw new RuntimeException("unknown mixin: " + mixinClassName);
-        }
+        return true;
     }
 
     @Override

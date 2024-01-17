@@ -1,7 +1,7 @@
 package moe.lymia.simplecavebiomes.mixins;
 
 import com.pg85.otg.forge.biome.OTGBiomeProvider;
-import moe.lymia.simplecavebiomes.otg.CaveBiomeProvider;
+import moe.lymia.simplecavebiomes.world.CaveBiomeProvider;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;

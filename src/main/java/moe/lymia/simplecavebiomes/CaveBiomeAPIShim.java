@@ -10,5 +10,4 @@ import org.apache.logging.log4j.Logger;
 @Mod(value = CaveBiomeAPIShim.MOD_ID)
 public class CaveBiomeAPIShim {
     public static final String MOD_ID = "cavebiomeapi";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 }

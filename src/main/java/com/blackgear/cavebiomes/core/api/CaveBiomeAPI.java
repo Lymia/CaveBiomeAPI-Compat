@@ -1,14 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.blackgear.cavebiomes.core.api;
 
 import com.blackgear.cavebiomes.core.CBAConfig;
 import com.google.common.base.Preconditions;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesObjects;
+import moe.lymia.simplecavebiomes.world.CaveBiomeProvider;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
@@ -20,25 +16,17 @@ public final class CaveBiomeAPI {
     private CaveBiomeAPI() {}
 
     public static final BiomeDictionary.Type UNDERGROUND = SimpleCaveBiomesObjects.UNDERGROUND;
-    private static MultiNoiseBiomeSource caveBiomeSource;
 
-    public static void initializeCaveBiomes(Registry<Biome> biomeRegistry, long seed) {
-        caveBiomeSource = CaveLayer.create(biomeRegistry, seed);
+    private static CaveBiomeProvider CAVE_BIOMES = null;
+
+    @Deprecated
+    public synchronized static void initializeCaveBiomes(Registry<Biome> biomeRegistry, long seed) {
+        CAVE_BIOMES = new CaveBiomeProvider(biomeRegistry, seed);
     }
 
-    public static Biome injectCaveBiomes(Biome surfaceBiomes, int x, int y, int z) {
-        Biome caveBiomes = caveBiomeSource.getBiomeForNoiseGen(x, 0, z);
-        if ((float) y <= 12.0F + surfaceBiomes.getDepth() * 3.0F && y >= 1) {
-            if ((Boolean) CBAConfig.GENERATE_DEFAULT_CAVES.get()) {
-                return caveBiomes;
-            }
-
-            if (caveBiomes.getCategory() != Category.EXTREME_HILLS) {
-                return caveBiomes;
-            }
-        }
-
-        return surfaceBiomes;
+    @Deprecated
+    public synchronized static Biome injectCaveBiomes(Biome surfaceBiomes, int x, int y, int z) {
+        return CAVE_BIOMES.getBiome(surfaceBiomes, x, y, z);
     }
 
     /**
@@ -65,9 +53,6 @@ public final class CaveBiomeAPI {
         SimpleCaveBiomesAPI.addCaveBiome(biome.getRegistryName(), noisePoint);
     }
 
-    /**
-     * Does nothing.
-     */
     @Deprecated
     public static void addDefaultCaves() {
         // does nothing

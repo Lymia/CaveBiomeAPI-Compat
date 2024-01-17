@@ -5,9 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "cavebiomeapi_compat.refmap.json",
   "plugin": "moe.lymia.simplecavebiomes.mixins.ConfigPlugin",
-  "client": [
-    "BiomeColorsMixin"
-  ],
   "mixins": [
     "OTGBiomeProviderHook",
     "OTGChunkGeneratorHook"

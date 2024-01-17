@@ -73,17 +73,17 @@ public final class SimpleCaveBiomesAPI {
         List<Pair<Biome.MixedNoisePoint, Supplier<Biome>>> caveBiomes = new ArrayList<>();
         CaveBiomeAPICompat.COMPAT_BIOME_LIST.clear();
         NOISE_POINTS.forEach((identifier, point) -> {
-            Optional<Biome> optBiome = biomes.getOrEmpty(identifier);
+            var optBiome = biomes.getOrEmpty(identifier);
             if (!optBiome.isPresent()) throw new IllegalArgumentException("Biome `" + identifier + "` does not exist!");
-            Biome biome = optBiome.get();
+            var biome = optBiome.get();
             caveBiomes.add(Pair.of(point, () -> biome));
             CaveBiomeAPICompat.COMPAT_BIOME_LIST.add(biome);
         });
 
-        MultiNoiseBiomeSource.NoiseParameters temperature = createParams(-9, 1.5, 0.0, 1.0, 0.0, 0.0, 0.0);
-        MultiNoiseBiomeSource.NoiseParameters humidity = createParams(-7, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0);
-        MultiNoiseBiomeSource.NoiseParameters altitude = createParams(-9, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0);
-        MultiNoiseBiomeSource.NoiseParameters weirdness = createParams(-7, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+        var temperature = createParams(-9, 1.5, 0.0, 1.0, 0.0, 0.0, 0.0);
+        var humidity = createParams(-7, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0);
+        var altitude = createParams(-9, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0);
+        var weirdness = createParams(-7, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0);
         return NetherBiomeProviderAccessor.createMultiNoiseBiomeSource(seed, caveBiomes, temperature, humidity,
                 altitude, weirdness, Optional.empty());
     }
