@@ -3,9 +3,10 @@
   "minVersion": "0.8",
   "package": "moe.lymia.simplecavebiomes.mixins",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "cavebiomeapi_compat.refmap.json",
+  "refmap": "simplecavebiomes.refmap.json",
   "mixins": [
     "BiomeSourceHook",
+    "ChunkStatusHook",
     "MultiNoiseBiomeSourceAccessor"
   ],
   "injectors": {

@@ -9,6 +9,9 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
+/**
+ * Compatibility shim for CaveBiomeAPI.
+ */
 public final class CaveBiomeAPI {
     private CaveBiomeAPI() {}
 
@@ -18,7 +21,7 @@ public final class CaveBiomeAPI {
 
     @Deprecated
     public synchronized static void initializeCaveBiomes(Registry<Biome> biomeRegistry, long seed) {
-        CAVE_BIOMES = new CaveBiomeProvider(biomeRegistry, seed);
+        CAVE_BIOMES = new CaveBiomeProvider(biomeRegistry, seed, null);
     }
 
     @Deprecated

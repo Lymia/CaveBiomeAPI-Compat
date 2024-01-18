@@ -19,6 +19,7 @@ public final class ScbRegistries {
 
     public static final RegistryObject<Biome> CAVE = BIOMES.register("caves", () -> {
         Biome.Builder biome = new Biome.Builder();
+        biome.precipitation(Biome.Precipitation.RAIN);
         biome.category(Biome.Category.EXTREME_HILLS);
         biome.depth(0.125F).scale(0.05F).temperature(0.8F).downfall(0.4F);
 

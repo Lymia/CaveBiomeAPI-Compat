@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import moe.lymia.simplecavebiomes.CaveBiomeAPICompat;
+import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.mixins.MultiNoiseBiomeSourceAccessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -36,6 +37,10 @@ public final class SimpleCaveBiomesAPI {
     public static synchronized void addCaveBiome(Identifier biome, Biome.MixedNoisePoint noisePoint) {
         Preconditions.checkNotNull(biome, "`biome` must not be `null`");
         Preconditions.checkNotNull(noisePoint, "`noisePoint` must not be `null`");
+
+        if (!NOISE_POINTS.containsKey(biome)) {
+            SimpleCaveBiomes.LOGGER.info("New cave biome registered: " + biome);
+        }
         NOISE_POINTS.put(biome, noisePoint);
         CaveBiomeAPICompat.COMPAT_NOISE_LIST.put(RegistryKey.of(CaveBiomeAPICompat.REGISTRY_BIOME, biome), noisePoint);
     }
@@ -46,7 +51,7 @@ public final class SimpleCaveBiomesAPI {
      * @param noisePoint The point on the multinoise to generate normal caves at.
      */
     public static void addDefaultCaveBiome(Biome.MixedNoisePoint noisePoint) {
-        Preconditions.checkNotNull(noisePoint, "`noisePoint` must not be `null`");
+        addCaveBiome(SimpleCaveBiomesObjects.CAVE.getId(), noisePoint);
     }
 
     /**
