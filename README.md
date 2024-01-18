@@ -11,5 +11,5 @@ You can find the original project here: [CaveBiomeAPI](https://www.curseforge.co
 
 ## Limitations
 
-Unlike CaveBiomeAPI, SimpleCaveBiomes does not implement carvers to attempt to replicate 1.18 world generation. Use
+Unlike CaveBiomeAPI, SimpleCaveBiomes does not implement carvers to attempt to replicate 1.18 cave caverns. Use
 [YUNG's Better Caves](https://www.curseforge.com/minecraft/mc-mods/yungs-better-caves) instead.
