@@ -5,6 +5,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
+// (this class is used by Darker Depths, despite not being an API class)
+
 /**
  * Compatibility shim for CaveBiomeAPI.
  */
