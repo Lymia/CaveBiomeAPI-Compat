@@ -4,6 +4,11 @@ A drop-in replacement for CaveBiomeAPI with better mod compatibility.
 
 You can find the original project here: [CaveBiomeAPI](https://www.curseforge.com/minecraft/mc-mods/cavebiomeapi)
 
+## Installation
+
+* Remove CaveBiomeAPI from your mods directory.
+* Install SimpleCaveBiomes in its place.
+
 ## Limitations & Technical Details
 
 Unlike CaveBiomeAPI, SimpleCaveBiomes does not actually load the biomes into the world, only generates the features
