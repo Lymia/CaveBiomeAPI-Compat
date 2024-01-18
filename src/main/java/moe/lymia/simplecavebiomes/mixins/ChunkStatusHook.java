@@ -57,7 +57,7 @@ public class ChunkStatusHook {
         BiomeSourceExtension extension = (BiomeSourceExtension) generator.getBiomeSource();
         CaveBiomeProvider provider = extension.scb$getCaveBiomeProvider();
         if (provider != null) {
-            provider.applyCaveBiomes(world.getRegistryManager().get(Registry.BIOME_KEY), chunk);
+            provider.applyCaveBiomes(generator, world.getRegistryManager().get(Registry.BIOME_KEY), chunk);
         }
     }
 }

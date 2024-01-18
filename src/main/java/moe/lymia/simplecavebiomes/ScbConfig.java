@@ -19,10 +19,12 @@ public final class ScbConfig {
 
     private static volatile boolean IS_DEBUG = false;
     private static volatile boolean USE_REAL_BIOMES = true;
+    private static volatile boolean GENERATE_CAVE_BIOME = false;
     private static volatile Set<String> WHITELISTED_DIMENSIONS = null;
 
     private static final ForgeConfigSpec.BooleanValue OPT_IS_DEBUG_MODE;
     private static final ForgeConfigSpec.BooleanValue OPT_USE_REAL_BIOMES;
+    private static final ForgeConfigSpec.BooleanValue OPT_GENERATE_CAVE_BIOME;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> OPT_WHITELISTED_DIMENSIONS;
 
     static {
@@ -35,6 +37,10 @@ public final class ScbConfig {
         OPT_WHITELISTED_DIMENSIONS = configBuilder.comment("A list of dimensions to generate cave biomes in.")
                 .defineList("whitelisted_dimensions", Collections.singletonList("minecraft:overworld"),
                         x -> x instanceof String);
+        OPT_GENERATE_CAVE_BIOME = configBuilder.comment(
+                        "Whether to generate the generic cave biome underground. This causes problems, and is " +
+                                "generally not recommended except for debugging purposes.")
+                .define("generate_cave_biome", false);
         OPT_IS_DEBUG_MODE = configBuilder.comment(
                 "Whether to print extra debugging information to the log.\nThis should be enabled unless the " +
                         "developer asks you to.").define("is_debug_mode", false);
@@ -51,6 +57,7 @@ public final class ScbConfig {
 
         // Process other options.
         USE_REAL_BIOMES = OPT_USE_REAL_BIOMES.get();
+        GENERATE_CAVE_BIOME = OPT_GENERATE_CAVE_BIOME.get();
         WHITELISTED_DIMENSIONS = new HashSet<>(OPT_WHITELISTED_DIMENSIONS.get());
     }
 
@@ -60,6 +67,10 @@ public final class ScbConfig {
 
     public static boolean isUseRealBiomes() {
         return USE_REAL_BIOMES;
+    }
+
+    public static boolean isGenerateCaveBiome() {
+        return GENERATE_CAVE_BIOME;
     }
 
     public static boolean isDimensionWhitelisted(Identifier dimension) {
