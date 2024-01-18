@@ -1,0 +1,25 @@
+archivesBaseName = "${project.archives_base_name}-Forge"
+
+architectury {
+	platformSetupLoomIde()
+	forge()
+}
+
+loom {
+    forge {
+        mixinConfigs = ["simplecavebiomes.mixins.json"]
+    }
+    mixin.defaultRefmapName = "simplecavebiomes.refmap.json"
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}

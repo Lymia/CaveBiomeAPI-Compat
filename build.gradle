@@ -1,173 +1,42 @@
 plugins {
-	id 'dev.architectury.loom' version '1.4.380'
-	id 'maven-publish'
-	id "me.modmuss50.mod-publish-plugin" version "0.3.4"
+	id "architectury-plugin" version "3.4.151"
+	id 'dev.architectury.loom' version '1.4.380' apply false
 }
 
-loom {
-    silentMojangMappingsLicense()
-	forge {
-		mixinConfigs = [
-			"simplecavebiomes.mixins.json"
-		]
-	}
-	mixin.defaultRefmapName = "simplecavebiomes.refmap.json"
+architectury {
+	minecraft = rootProject.minecraft_version
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+subprojects {
+	apply plugin: "dev.architectury.loom"
 
-archivesBaseName = project.archives_base_name
-version = "${project.mod_version}+mc${project.minecraft_version}"
-group = project.maven_group
-
-sourceSets {
-	compat {
-		java {
-			compileClasspath += main.compileClasspath
-			compileClasspath += main.output
-		}
-	}
-
-	main {
-		java {
-			runtimeClasspath += compat.output
-		}
+	dependencies {
+		minecraft "com.mojang:minecraft:${project.minecraft_version}"
+		mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	}
 }
 
-loom {
-	createRemapConfigurations(sourceSets.compat)
-}
+allprojects {
+	apply plugin: "java"
+	apply plugin: "architectury-plugin"
 
-repositories {
-	maven {
-		url "https://cursemaven.com"
-		content {
-			includeGroup "curse.maven"
-		}
-	}
-	maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
-    	}
-  	}
-}
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
 
-def extraModsDir = "extra-mods-${project.minecraft_version}"
-
-repositories {
-	exclusiveContent {
-		forRepository {
-			flatDir {
-				name "extra-mods"
-				dir file(extraModsDir)
-			}
-		}
-		filter {
-			includeGroup "extra-mods"
-		}
-	}
-}
-
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-	modLocalRuntime "curse.maven:caves-and-cliffs-backport-417430:3592876"
-	modLocalRuntime "curse.maven:darker-depths-460681:3458010"
-
-	// runtime remapping at home
-	for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
-		def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
-		def versionSep = basename.lastIndexOf('-')
-		assert versionSep != -1
-		def artifactId = basename.substring(0, versionSep)
-		def version = basename.substring(versionSep + 1)
-		modRuntimeOnly("extra-mods:$artifactId:$version")
-	}
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-
-	def targetVersion = 8
-	if (JavaVersion.current().isJava9Compatible()) {
-		 it.options.release = targetVersion
-	}
-}
-
-
-java {
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-	from sourceSets.compat.output.classesDirs
-	from sourceSets.compat.output.resourcesDir
-}
-
-def copyJarNameConsistent = tasks.register('copyJarNameConsistent', Copy) {
-	from remapJar // shortcut for createJar.outputs.files
-	into project.file("build/libs")
-	rename { name -> "SimpleCaveBiomes-latest.jar" }
-}
-
-def copyJarToBin = tasks.register('copyJarToBin', Copy) {
-	from remapJar // shortcut for createJar.outputs.files
-	into rootProject.file("bin")
-	mustRunAfter "copyJarNameConsistent"
-}
-
-tasks.named("remapSourcesJar") {
-	mustRunAfter "copyJarNameConsistent"
-}
-
-tasks.build.dependsOn(copyJarToBin, copyJarNameConsistent)
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(remapSourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-	}
+	version = "${project.mod_version}+mc${project.minecraft_version}"
+	group = project.maven_group
 
 	repositories {
 		maven {
-			url "file://${System.getenv("local_maven")}"
+			url "https://maven.architectury.dev/"
 		}
 	}
-}
 
-publishMods {
-	file = remapJar.archiveFile
-	type = STABLE
-	modLoaders.add("forge")
-
-	curseforge {
-		projectId = "962879"
-		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-		minecraftVersions.add(project.minecraft_version)
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = "UTF-8"
 	}
 
-	displayName = "SimpleCaveBiomes v${project.mod_version}"
+	java {
+		withSourcesJar()
+	}
 }
