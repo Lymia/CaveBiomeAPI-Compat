@@ -9,11 +9,7 @@ You can find the original project here: [CaveBiomeAPI](https://www.curseforge.co
 * Remove CaveBiomeAPI from your mods directory.
 * Install SimpleCaveBiomes in its place.
 
-## Limitations & Technical Details
+## Limitations
 
-Unlike CaveBiomeAPI, SimpleCaveBiomes does not actually load the biomes into the world, only generates the features
-from them. As a result, cave biomes cannot override spawn tables and will not show in the F3 menu or minimap mods.
-
-In return, this mod is fully compatible with mods like [Embeddium](https://github.com/embeddedt/embeddium/issues/172)
-(CaveBiomeAPI breaks grass color when used with Embeddium) and OpenTerrainGenerator (which would require specific hooks
-to support), as it does not need to do anything fancy to worldgen.
+Unlike CaveBiomeAPI, SimpleCaveBiomes does not implement carvers to attempt to replicate 1.18 world generation. Use
+[YUNG's Better Caves](https://www.curseforge.com/minecraft/mc-mods/yungs-better-caves) instead.
