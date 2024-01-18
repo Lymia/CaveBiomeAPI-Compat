@@ -53,7 +53,7 @@ public final class CaveBiomeProvider {
         int x = mainChunkX * 16;
         int z = mainChunkZ * 16;
         BlockPos pos = new BlockPos(x, 0, z);
-        Biome caveBiome = getCaveBiome((mainChunkX << 2) + 2, 10, (mainChunkZ << 2) + 2);
+        Biome caveBiome = getCaveBiome((mainChunkX << 2) + 2, 5, (mainChunkZ << 2) + 2);
 
         if (ScbConfig.isDebug()) {
             SimpleCaveBiomes.LOGGER.info(
