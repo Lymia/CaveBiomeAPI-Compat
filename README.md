@@ -1,6 +1,9 @@
 # SimpleCaveBiomes
 
-A drop-in replacement for CaveBiomeAPI with better mod compatibility. Only Forge is currently supported.
+A drop-in replacement for CaveBiomeAPI with better mod compatibility.
+
+Only Forge is currently supported. There are no significant mods that use the Fabric version to my knowledge. Please
+submit an issue if you know of a mod worth porting it to Fabric for.
 
 You can find the original project here: [CaveBiomeAPI](https://www.curseforge.com/minecraft/mc-mods/cavebiomeapi)
 
