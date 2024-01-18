@@ -1,5 +1,6 @@
 package moe.lymia.simplecavebiomes.world;
 
+import moe.lymia.simplecavebiomes.ScbConfig;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import net.minecraft.util.Identifier;
@@ -49,8 +50,11 @@ public final class CaveBiomeProvider {
         BlockPos pos = new BlockPos(x, 0, z);
         Biome caveBiome = getCaveBiome((mainChunkX << 2) + 2, 10, (mainChunkZ << 2) + 2);
 
-        if (SimpleCaveBiomes.IS_DEBUG) SimpleCaveBiomes.LOGGER.info(
-                "generateCaveFeatures for (" + mainChunkX + ", " + mainChunkZ + ") - " + caveBiome.getRegistryName());
+        if (ScbConfig.isDebug()) {
+            SimpleCaveBiomes.LOGGER.info(
+                    "generateCaveFeatures | dimension: " + dimension + ", chunk: " + mainChunkX + ", " + mainChunkZ +
+                            ", biome: " + caveBiome.getRegistryName());
+        }
 
         if (SimpleCaveBiomesAPI.isCaveBiome(caveBiome.getRegistryName())) {
             ChunkRandom random = new ChunkRandom();

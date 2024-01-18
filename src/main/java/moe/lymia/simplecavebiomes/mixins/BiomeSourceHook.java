@@ -1,5 +1,6 @@
 package moe.lymia.simplecavebiomes.mixins;
 
+import moe.lymia.simplecavebiomes.ScbConfig;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.world.BiomeSourceExtension;
 import moe.lymia.simplecavebiomes.world.CaveBiomeProvider;
@@ -17,7 +18,7 @@ public class BiomeSourceHook implements BiomeSourceExtension {
     @Unique
     private volatile CaveBiomeProvider scb$caveBiomeProvider = null;
     @Unique
-    private volatile boolean scb$processed = false;
+    private volatile boolean scb$initRun = false;
     @Unique
     private final Object scb$lock = new Object();
 
@@ -28,20 +29,17 @@ public class BiomeSourceHook implements BiomeSourceExtension {
 
     @Override
     public void scb$initGeneration(ServerWorld world) {
-        if (!scb$processed) {
+        if (!scb$initRun) {
             synchronized (scb$lock) {
-                if (!scb$processed) {
-                    Identifier dimensionName = world.getRegistryKey().getValue();
-                    if (SimpleCaveBiomes.IS_DEBUG) SimpleCaveBiomes.LOGGER.info("initGeneration for " + dimensionName);
-
-                    // TODO: This shouldn't be hardcoded.
-                    if (dimensionName.equals(new Identifier("minecraft", "overworld"))) {
-                        if (SimpleCaveBiomes.IS_DEBUG) SimpleCaveBiomes.LOGGER.info("(enabled for " + dimensionName + ")");
+                if (!scb$initRun) {
+                    Identifier dimensionId = world.getRegistryKey().getValue();
+                    if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("initGeneration for " + dimensionId);
+                    if (ScbConfig.isDimensionWhitelisted(dimensionId)) {
+                        if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("(enabled for " + dimensionId + ")");
                         Registry<Biome> biomes = world.getRegistryManager().get(ForgeRegistries.Keys.BIOMES);
-                        scb$caveBiomeProvider = new CaveBiomeProvider(biomes, world.getSeed(), dimensionName);
+                        scb$caveBiomeProvider = new CaveBiomeProvider(biomes, world.getSeed(), dimensionId);
                     }
-
-                    scb$processed = true;
+                    scb$initRun = true;
                 }
             }
         }
