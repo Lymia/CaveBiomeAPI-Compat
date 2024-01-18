@@ -77,6 +77,9 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+	modLocalRuntime "curse.maven:caves-and-cliffs-backport-417430:3592876"
+	modLocalRuntime "curse.maven:darker-depths-460681:3458010"
+
 	// runtime remapping at home
 	for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
 		def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())

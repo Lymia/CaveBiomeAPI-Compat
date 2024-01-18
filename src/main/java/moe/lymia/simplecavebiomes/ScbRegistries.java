@@ -1,6 +1,7 @@
 package moe.lymia.simplecavebiomes;
 
 import net.minecraft.sound.BiomeMoodSound;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
@@ -16,6 +17,8 @@ public final class ScbRegistries {
 
     public static final DeferredRegister<Biome> BIOMES =
             DeferredRegister.create(ForgeRegistries.BIOMES, SimpleCaveBiomes.MOD_ID);
+
+    public static final Identifier CAVE_ID = new Identifier(SimpleCaveBiomes.MOD_ID, "caves");
 
     public static final RegistryObject<Biome> CAVE = BIOMES.register("caves", () -> {
         Biome.Builder biome = new Biome.Builder();

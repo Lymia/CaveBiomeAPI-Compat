@@ -8,6 +8,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * Compatibility shim for CaveBiomeAPI.
@@ -17,16 +18,15 @@ public final class CaveBiomeAPI {
 
     public static final BiomeDictionary.Type UNDERGROUND = SimpleCaveBiomesObjects.UNDERGROUND;
 
-    private static CaveBiomeProvider CAVE_BIOMES = null;
-
     @Deprecated
-    public synchronized static void initializeCaveBiomes(Registry<Biome> biomeRegistry, long seed) {
-        CAVE_BIOMES = new CaveBiomeProvider(biomeRegistry, seed, null);
+    public static void initializeCaveBiomes(Registry<Biome> biomeRegistry, long seed) {
+        // does nothing
     }
 
     @Deprecated
-    public synchronized static Biome injectCaveBiomes(Biome surfaceBiomes, int x, int y, int z) {
-        return CAVE_BIOMES.filterCaveBiome(surfaceBiomes, x, y, z);
+    public static Biome injectCaveBiomes(Biome surfaceBiomes, int x, int y, int z) {
+        // also does nothing
+        return surfaceBiomes;
     }
 
     /**
@@ -55,6 +55,6 @@ public final class CaveBiomeAPI {
 
     @Deprecated
     public static void addDefaultCaves() {
-        // does nothing
+        // still does nothing
     }
 }

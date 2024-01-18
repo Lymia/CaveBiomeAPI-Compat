@@ -1,45 +1,62 @@
 package moe.lymia.simplecavebiomes.world;
 
+import com.mojang.serialization.Codec;
 import moe.lymia.simplecavebiomes.ScbConfig;
+import moe.lymia.simplecavebiomes.ScbRegistries;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeArray;
+import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public final class CaveBiomeProvider {
+    private final BiomeSource parent;
     private final MultiNoiseBiomeSource caveBiomeSource;
     private final Identifier dimension;
+    private final FilteredBiomeSource filteredBiomeSource;
 
-    public CaveBiomeProvider(Registry<Biome> biomes, long seed, Identifier dimension) {
+    public CaveBiomeProvider(BiomeSource parent, Registry<Biome> biomes, long seed, Identifier dimension) {
+        this.parent = parent;
         this.caveBiomeSource = SimpleCaveBiomesAPI.createNoise(biomes, seed);
         this.dimension = dimension;
+        this.filteredBiomeSource = new FilteredBiomeSource();
+    }
+
+    public Biome getSurfaceBiome(int x, int y, int z) {
+        return parent.getBiomeForNoiseGen(x, y, z);
     }
 
     public Biome getCaveBiome(int x, int y, int z) {
         return caveBiomeSource.getBiomeForNoiseGen(x, y, z);
     }
 
-    public Biome filterCaveBiome(Biome surfaceBiome, int x, int y, int z) {
-        if ((float) y <= 12.0F + surfaceBiome.getDepth() * 4.0F && y >= 1) {
-            Biome caveBiomes = getCaveBiome(x, y, z);
-            if (caveBiomes.getCategory() != Biome.Category.EXTREME_HILLS) {
-                return caveBiomes;
-            }
+    public Biome getBiome(int x, int y, int z) {
+        final Biome surfaceBiome = getSurfaceBiome(x, y, z);
+        Biome outBiome = surfaceBiome;
+        if ((float) y <= 12.0F + surfaceBiome.getDepth() * 3.0F && y >= 1) {
+            final Biome caveBiome = getCaveBiome(x, y, z);
+            if (!Objects.equals(caveBiome.getRegistryName(), ScbRegistries.CAVE_ID)) outBiome = caveBiome;
         }
-        return surfaceBiome;
+        SimpleCaveBiomes.LOGGER.info(x + " " + y + " " + z + " " + outBiome.getRegistryName());
+        return outBiome;
     }
 
     public void generateCaveFeatures(ChunkGenerator generator, ChunkRegion region) {
@@ -95,6 +112,35 @@ public final class CaveBiomeProvider {
                 }
             }
         }
+    }
 
+    public void applyCaveBiomes(Registry<Biome> biomeRegistry, Chunk chunk) {
+        if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("applyCaveBiomes: " + chunk + " " + chunk.getPos());
+
+        ChunkPos lv = chunk.getPos();
+        ((ProtoChunk) chunk).setBiomes(new BiomeArray(biomeRegistry, lv, this.filteredBiomeSource));
+    }
+
+    private final class FilteredBiomeSource extends BiomeSource {
+        public FilteredBiomeSource() {
+            super(parent.getBiomes());
+        }
+
+        @Override
+        protected Codec<? extends BiomeSource> getCodec() {
+            // will never be called
+            return null;
+        }
+
+        @Override
+        public BiomeSource withSeed(long seed) {
+            // will never be called
+            return null;
+        }
+
+        @Override
+        public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
+            return getBiome(biomeX, biomeY, biomeZ);
+        }
     }
 }

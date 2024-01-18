@@ -17,6 +17,6 @@ public final class CaveBiomes {
     public static final RegistryObject<Biome> CAVE = ScbRegistries.CAVE;
 
     public static Biome makeDefaultCaves() {
-        throw new RuntimeException("not implemented");
+        return CAVE.get();
     }
 }

@@ -1,10 +1,12 @@
 package moe.lymia.simplecavebiomes.mixins;
 
+import moe.lymia.simplecavebiomes.ScbConfig;
 import moe.lymia.simplecavebiomes.world.BiomeSourceExtension;
 import moe.lymia.simplecavebiomes.world.CaveBiomeProvider;
 import net.minecraft.server.world.ServerLightingProvider;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
@@ -43,6 +45,19 @@ public class ChunkStatusHook {
         CaveBiomeProvider provider = extension.scb$getCaveBiomeProvider();
         if (provider != null) {
             provider.generateCaveFeatures(instance, region);
+        }
+    }
+
+    @Inject(method = {"method_17034", "func_222598_a"}, at = @At("HEAD"))
+    private static void applyRealBiomeMap(ChunkStatus targetStatus, ServerWorld world, ChunkGenerator generator,
+            StructureManager structureManager, ServerLightingProvider lightingProvider, Function function,
+            List surroundingChunks, Chunk chunk, CallbackInfoReturnable<CompletableFuture> cir) {
+        if (!ScbConfig.isUseRealBiomes()) return;
+
+        BiomeSourceExtension extension = (BiomeSourceExtension) generator.getBiomeSource();
+        CaveBiomeProvider provider = extension.scb$getCaveBiomeProvider();
+        if (provider != null) {
+            provider.applyCaveBiomes(world.getRegistryManager().get(Registry.BIOME_KEY), chunk);
         }
     }
 }
