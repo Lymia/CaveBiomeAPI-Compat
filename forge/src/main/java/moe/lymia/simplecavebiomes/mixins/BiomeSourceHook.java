@@ -36,10 +36,11 @@ public class BiomeSourceHook implements BiomeSourceExtension {
                     if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("initGeneration for " + dimensionId);
                     if (ScbConfig.isDimensionWhitelisted(dimensionId)) {
                         if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("(enabled for " + dimensionId + ")");
+
+                        BiomeSource source = (BiomeSource) (Object) this;
                         Registry<Biome> biomes = world.getRegistryManager().get(ForgeRegistries.Keys.BIOMES);
-                        scb$caveBiomeProvider =
-                                new CaveBiomeProvider((BiomeSource) (Object) this, biomes, world.getSeed(),
-                                        dimensionId);
+                        long seed = dimensionId.toString().hashCode() ^ world.getSeed();
+                        scb$caveBiomeProvider = new CaveBiomeProvider(source, biomes, seed, dimensionId);
                     }
                     scb$initRun = true;
                 }
