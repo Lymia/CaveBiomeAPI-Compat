@@ -65,7 +65,8 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
         CaveBiomeProvider provider = caveBiomeProvider;
         if (provider != null && predicate instanceof ServerWorldLocateBiomePredicate) {
             ServerWorldLocateBiomePredicate biomePredicate = (ServerWorldLocateBiomePredicate) predicate;
-            if (!ScbConfig.isGenerateCaveBiome() && biomePredicate.targetBiome == ScbRegistries.CAVE.get()) return;
+            if (!ScbConfig.isGenerateCaveBiome() &&
+                    ScbRegistries.CAVE_ID.equals(biomePredicate.targetBiome.getRegistryName())) return;
             if (SimpleCaveBiomesAPI.isCaveBiome(biomePredicate.targetBiome.getRegistryName())) {
                 cir.setReturnValue(
                         provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, predicate, random, bl));
@@ -82,8 +83,8 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
             if (provider != null && SimpleCaveBiomesAPI.acceptsCaveBiomes(predicate)) {
                 Predicate<Biome> mappedPredicate = predicate;
                 if (!ScbConfig.isGenerateCaveBiome()) {
-                    Biome caveBiome = ScbRegistries.CAVE.get();
-                    mappedPredicate = biome -> biome != caveBiome && predicate.test(biome);
+                    mappedPredicate =
+                            biome -> ScbRegistries.CAVE_ID.equals(biome.getRegistryName()) && predicate.test(biome);
                 }
                 cir.setReturnValue(
                         provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, mappedPredicate, random, bl));
