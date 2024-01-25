@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.base;
 
 import com.mojang.datafixers.DataFixer;
 import moe.lymia.simplecavebiomes.world.BiomeSourceExtension;

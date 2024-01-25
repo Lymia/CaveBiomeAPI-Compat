@@ -4,18 +4,20 @@
   "package": "moe.lymia.simplecavebiomes.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "simplecavebiomes.refmap.json",
+  "plugin": "moe.lymia.simplecavebiomes.mixins.ConfigPlugin",
   "mixins": [
-    "BiomeSourceHook",
-    "ChunkStatusHook",
-    "MultiNoiseBiomeSourceAccessor",
-    "ServerChunkManagerHook",
-    "ServerWorldHook",
-    "WorldHook"
+    "accessors.MultiNoiseBiomeSourceAccessor",
+    "base.BiomeSourceHook",
+    "base.ChunkStatusHook",
+    "base.ServerChunkManagerHook",
+    "base.ServerWorldHook",
+    "base.WorldHook",
+    "compat.NaturesCompassCompat"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "BiomeColorCacheHook"
+    "base.BiomeColorCacheHook"
   ]
 }

@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.base;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import moe.lymia.simplecavebiomes.world.BiomeColorCacheClasses.CubicColors;
@@ -16,16 +16,16 @@ import static moe.lymia.simplecavebiomes.world.BiomeColorCacheClasses.MAX_ENTRY_
 
 /**
  * Replaces the implementation of BiomeColorCache with one derived from MC 1.20.4
- *
+ * <p>
  * Everything here is an overwrite because, uh... This amounts to a class replacement.
  */
 @Mixin(BiomeColorCache.class)
 public class BiomeColorCacheHook {
     @Unique
-    private final ThreadLocal<CubicLast> scb$last = ThreadLocal.withInitial(CubicLast::new);
+    private final ThreadLocal<CubicLast> last = ThreadLocal.withInitial(CubicLast::new);
 
     @Unique
-    private final Long2ObjectLinkedOpenHashMap<CubicColors> scb$colors =
+    private final Long2ObjectLinkedOpenHashMap<CubicColors> colors =
             new Long2ObjectLinkedOpenHashMap<>(MAX_ENTRY_SIZE, 0.25F);
 
     @Shadow
@@ -36,7 +36,7 @@ public class BiomeColorCacheHook {
     public int getBiomeColor(BlockPos pos, IntSupplier colorFactory) {
         int chunkX = ChunkSectionPos.getSectionCoord(pos.getX());
         int chunkZ = ChunkSectionPos.getSectionCoord(pos.getZ());
-        CubicLast last = this.scb$last.get();
+        CubicLast last = this.last.get();
         if (last.x != chunkX || last.z != chunkZ || last.colors == null || last.colors.needsCacheRefresh()) {
             last.x = chunkX;
             last.z = chunkZ;
@@ -64,7 +64,7 @@ public class BiomeColorCacheHook {
             for (int k = -1; k <= 1; ++k) {
                 for (int l = -1; l <= 1; ++l) {
                     long m = ChunkPos.toLong(chunkX + k, chunkZ + l);
-                    CubicColors oldColors = this.scb$colors.remove(m);
+                    CubicColors oldColors = this.colors.remove(m);
                     if (oldColors != null) oldColors.setNeedsCacheRefresh();
                 }
             }
@@ -77,8 +77,8 @@ public class BiomeColorCacheHook {
     public void reset() {
         try {
             this.lock.writeLock().lock();
-            this.scb$colors.values().forEach(CubicColors::setNeedsCacheRefresh);
-            this.scb$colors.clear();
+            this.colors.values().forEach(CubicColors::setNeedsCacheRefresh);
+            this.colors.clear();
         } finally {
             this.lock.writeLock().unlock();
         }
@@ -90,7 +90,7 @@ public class BiomeColorCacheHook {
         this.lock.readLock().lock();
 
         try {
-            CubicColors colors = this.scb$colors.get(encodedChunkPos);
+            CubicColors colors = this.colors.get(encodedChunkPos);
             if (colors != null) {
                 return colors;
             }
@@ -101,16 +101,16 @@ public class BiomeColorCacheHook {
         this.lock.writeLock().lock();
 
         try {
-            CubicColors colors = this.scb$colors.get(encodedChunkPos);
+            CubicColors colors = this.colors.get(encodedChunkPos);
             if (colors == null) {
                 CubicColors newColors = new CubicColors();
-                if (this.scb$colors.size() >= MAX_ENTRY_SIZE) {
-                    CubicColors oldColors = this.scb$colors.removeFirst();
+                if (this.colors.size() >= MAX_ENTRY_SIZE) {
+                    CubicColors oldColors = this.colors.removeFirst();
                     if (oldColors != null) {
                         oldColors.setNeedsCacheRefresh();
                     }
                 }
-                this.scb$colors.put(encodedChunkPos, newColors);
+                this.colors.put(encodedChunkPos, newColors);
                 return newColors;
             }
             return colors;

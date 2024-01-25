@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.base;
 
 import moe.lymia.simplecavebiomes.ScbConfig;
 import net.minecraft.util.Identifier;
@@ -21,8 +21,7 @@ public class WorldHook {
         BiomeAccessType accessType = instance.getBiomeAccessType();
 
         if (ScbConfig.isDimensionWhitelisted(dimensionId)) {
-            if (accessType instanceof HorizontalVoronoiBiomeAccessType)
-                return VoronoiBiomeAccessType.INSTANCE;
+            if (accessType instanceof HorizontalVoronoiBiomeAccessType) return VoronoiBiomeAccessType.INSTANCE;
         }
         return accessType;
     }

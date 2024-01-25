@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.accessors;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.registry.Registry;

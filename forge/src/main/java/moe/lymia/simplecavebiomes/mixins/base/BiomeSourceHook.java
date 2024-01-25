@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.base;
 
 import moe.lymia.simplecavebiomes.ScbConfig;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
@@ -25,22 +25,22 @@ import java.util.function.Predicate;
 @Mixin(BiomeSource.class)
 public abstract class BiomeSourceHook implements BiomeSourceExtension {
     @Unique
-    private volatile CaveBiomeProvider scb$caveBiomeProvider = null;
+    private volatile CaveBiomeProvider caveBiomeProvider = null;
     @Unique
-    private volatile boolean scb$initRun = false;
+    private volatile boolean initRun = false;
     @Unique
-    private final Object scb$lock = new Object();
+    private final Object lock = new Object();
 
     @Override
     public CaveBiomeProvider scb$getCaveBiomeProvider() {
-        return scb$caveBiomeProvider;
+        return caveBiomeProvider;
     }
 
     @Override
     public void scb$initGeneration(ServerWorld world) {
-        if (!scb$initRun) {
-            synchronized (scb$lock) {
-                if (!scb$initRun) {
+        if (!initRun) {
+            synchronized (lock) {
+                if (!initRun) {
                     Identifier dimensionId = world.getRegistryKey().getValue();
                     if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("initGeneration for " + dimensionId);
                     if (ScbConfig.isDimensionWhitelisted(dimensionId)) {
@@ -49,9 +49,9 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
                         BiomeSource source = (BiomeSource) (Object) this;
                         Registry<Biome> biomes = world.getRegistryManager().get(ForgeRegistries.Keys.BIOMES);
                         long seed = dimensionId.toString().hashCode() ^ world.getSeed();
-                        scb$caveBiomeProvider = new CaveBiomeProvider(source, biomes, seed, dimensionId);
+                        caveBiomeProvider = new CaveBiomeProvider(source, biomes, seed, dimensionId);
                     }
-                    scb$initRun = true;
+                    initRun = true;
                 }
             }
         }
@@ -61,7 +61,7 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
             "Lnet/minecraft/util/math/BlockPos;", at = @At("HEAD"), cancellable = true)
     private void locateBiomeCheckFromWorld(int x, int y, int z, int radius, int m, Predicate<Biome> predicate,
             Random random, boolean bl, CallbackInfoReturnable<BlockPos> cir) {
-        CaveBiomeProvider provider = scb$caveBiomeProvider;
+        CaveBiomeProvider provider = caveBiomeProvider;
         if (provider != null && predicate instanceof ServerWorldLocateBiomePredicate) {
             ServerWorldLocateBiomePredicate biomePredicate = (ServerWorldLocateBiomePredicate) predicate;
             if (SimpleCaveBiomesAPI.isCaveBiome(biomePredicate.targetBiome.getRegistryName())) {
@@ -76,7 +76,7 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
     private void locateBiomeFallbackMixin(int x, int y, int z, int radius, int m, Predicate<Biome> predicate,
             Random random, boolean bl, CallbackInfoReturnable<BlockPos> cir) {
         if (cir.getReturnValue() == null && !(predicate instanceof ServerWorldLocateBiomePredicate)) {
-            CaveBiomeProvider provider = scb$caveBiomeProvider;
+            CaveBiomeProvider provider = caveBiomeProvider;
             if (provider != null && SimpleCaveBiomesAPI.acceptsCaveBiomes(predicate)) {
                 cir.setReturnValue(
                         provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, predicate, random, bl));

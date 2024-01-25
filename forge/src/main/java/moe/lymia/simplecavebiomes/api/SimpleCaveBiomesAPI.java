@@ -7,7 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import moe.lymia.simplecavebiomes.CaveBiomeAPICompat;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
-import moe.lymia.simplecavebiomes.mixins.MultiNoiseBiomeSourceAccessor;
+import moe.lymia.simplecavebiomes.mixins.accessors.MultiNoiseBiomeSourceAccessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;

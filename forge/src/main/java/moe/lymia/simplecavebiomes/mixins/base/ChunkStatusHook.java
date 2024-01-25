@@ -1,4 +1,4 @@
-package moe.lymia.simplecavebiomes.mixins;
+package moe.lymia.simplecavebiomes.mixins.base;
 
 import moe.lymia.simplecavebiomes.ScbConfig;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;

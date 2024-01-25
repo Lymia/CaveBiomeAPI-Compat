@@ -1,8 +1,8 @@
 archivesBaseName = "${project.archives_base_name}-Forge"
 
 architectury {
-	platformSetupLoomIde()
-	forge()
+    platformSetupLoomIde()
+    forge()
 }
 
 loom {
@@ -14,6 +14,17 @@ loom {
 
 dependencies {
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    modCompileOnly "curse.maven:natures-compass-252848:3382150"
+}
+
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 processResources {
