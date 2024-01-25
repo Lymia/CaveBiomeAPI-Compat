@@ -26,18 +26,6 @@ import java.util.function.Function;
 
 @Mixin(ChunkStatus.class)
 public class ChunkStatusHook {
-    @Inject(method = {"method_12151", "func_222605_b"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/gen" +
-            "/chunk/ChunkGenerator;generateFeatures(Lnet/minecraft/world/ChunkRegion;" +
-            "Lnet/minecraft/world/gen/StructureAccessor;)V"))
-    private static void beforeGenerateFeatures(ChunkStatus targetStatus, ServerWorld world, ChunkGenerator generator,
-            StructureManager structureManager, ServerLightingProvider lightingProvider, Function function,
-            List surroundingChunks, Chunk chunk, CallbackInfoReturnable<CompletableFuture> cir) {
-        // initialize the extension if possible
-        BiomeSourceExtension extension = (BiomeSourceExtension) generator.getBiomeSource();
-        if (ScbConfig.isDebug()) SimpleCaveBiomes.LOGGER.info("beforeGenerateFeatures - biomeSource: " + extension);
-        extension.scb$initGeneration(world);
-    }
-
     @Redirect(method = {"method_12151", "func_222605_b"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world" +
             "/gen/chunk/ChunkGenerator;generateFeatures(Lnet/minecraft/world/ChunkRegion;" +
             "Lnet/minecraft/world/gen/StructureAccessor;)V"))
