@@ -3,6 +3,7 @@ package moe.lymia.simplecavebiomes.mixins.compat;
 import com.blackgear.cavebiomes.core.api.CaveBiomeAPI;
 import com.chaosthedude.naturescompass.util.BiomeSearchWorker;
 import moe.lymia.simplecavebiomes.ScbConfig;
+import moe.lymia.simplecavebiomes.ScbRegistries;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import moe.lymia.simplecavebiomes.world.BiomeSourceExtension;
@@ -34,6 +35,8 @@ public class NaturesCompassCompat {
     private boolean isCaveBiomeSearch = false;
     @Unique
     private MultiNoiseBiomeSource caveBiomes = null;
+    @Unique
+    private Biome scbCaveBiome = null;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void injectInit(World world, PlayerEntity player, ItemStack stack, Biome biome, BlockPos startPos,
@@ -49,6 +52,7 @@ public class NaturesCompassCompat {
                                 startPos);
 
                 caveBiomes = provider.getCaveBiomeSource();
+                if (!ScbConfig.isGenerateCaveBiome()) scbCaveBiome = ScbRegistries.CAVE.get();
                 isCaveBiomeSearch = true;
             }
         }
@@ -65,7 +69,11 @@ public class NaturesCompassCompat {
             Chunk chunk = this.world.getChunk(x >> 2, z >> 2, ChunkStatus.BIOMES, false);
 
             if (chunk != null) return access.getBiome(pos);
-            else return caveBiomes.getBiomeForNoiseGen(x >> 2, y >> 2, z >> 2);
+            else {
+                Biome caveBiome = caveBiomes.getBiomeForNoiseGen(x >> 2, y >> 2, z >> 2);
+                if (scbCaveBiome != null && caveBiome == scbCaveBiome) return access.getBiome(pos);
+                else return caveBiome;
+            }
         } else {
             return access.getBiome(pos);
         }

@@ -1,6 +1,7 @@
 package moe.lymia.simplecavebiomes.mixins.base;
 
 import moe.lymia.simplecavebiomes.ScbConfig;
+import moe.lymia.simplecavebiomes.ScbRegistries;
 import moe.lymia.simplecavebiomes.SimpleCaveBiomes;
 import moe.lymia.simplecavebiomes.api.SimpleCaveBiomesAPI;
 import moe.lymia.simplecavebiomes.world.BiomeSourceExtension;
@@ -64,6 +65,7 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
         CaveBiomeProvider provider = caveBiomeProvider;
         if (provider != null && predicate instanceof ServerWorldLocateBiomePredicate) {
             ServerWorldLocateBiomePredicate biomePredicate = (ServerWorldLocateBiomePredicate) predicate;
+            if (!ScbConfig.isGenerateCaveBiome() && biomePredicate.targetBiome == ScbRegistries.CAVE.get()) return;
             if (SimpleCaveBiomesAPI.isCaveBiome(biomePredicate.targetBiome.getRegistryName())) {
                 cir.setReturnValue(
                         provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, predicate, random, bl));
@@ -78,8 +80,13 @@ public abstract class BiomeSourceHook implements BiomeSourceExtension {
         if (cir.getReturnValue() == null && !(predicate instanceof ServerWorldLocateBiomePredicate)) {
             CaveBiomeProvider provider = caveBiomeProvider;
             if (provider != null && SimpleCaveBiomesAPI.acceptsCaveBiomes(predicate)) {
+                Predicate<Biome> mappedPredicate = predicate;
+                if (!ScbConfig.isGenerateCaveBiome()) {
+                    Biome caveBiome = ScbRegistries.CAVE.get();
+                    mappedPredicate = biome -> biome != caveBiome && predicate.test(biome);
+                }
                 cir.setReturnValue(
-                        provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, predicate, random, bl));
+                        provider.getCaveBiomeSource().locateBiome(x, y, z, radius, m, mappedPredicate, random, bl));
             }
         }
     }
