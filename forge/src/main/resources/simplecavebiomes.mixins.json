@@ -9,6 +9,7 @@
     "ChunkStatusHook",
     "MultiNoiseBiomeSourceAccessor",
     "ServerChunkManagerHook",
+    "ServerWorldHook",
     "WorldHook"
   ],
   "injectors": {

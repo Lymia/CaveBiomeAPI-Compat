@@ -39,6 +39,10 @@ public final class CaveBiomeProvider {
         this.dimension = dimension;
     }
 
+    public MultiNoiseBiomeSource getCaveBiomeSource() {
+        return caveBiomeSource;
+    }
+
     public Biome getSurfaceBiome(int x, int y, int z) {
         return parent.getBiomeForNoiseGen(x, y, z);
     }

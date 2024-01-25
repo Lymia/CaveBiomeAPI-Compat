@@ -13,10 +13,12 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -63,6 +65,20 @@ public final class SimpleCaveBiomesAPI {
     public synchronized static boolean isCaveBiome(Identifier biome) {
         Preconditions.checkNotNull(biome, "`biome` must not be `null`");
         return NOISE_POINTS.containsKey(biome);
+    }
+
+    /**
+     * Checks whether a predicate accepts any cave biomes.
+     *
+     * @param predicate Predicate to test.
+     * @return Whether any cave biomes match the predicate.
+     */
+    public synchronized static boolean acceptsCaveBiomes(Predicate<Biome> predicate) {
+        for (Identifier id : NOISE_POINTS.keys()) {
+            Biome biome = ForgeRegistries.BIOMES.getValue(id);
+            if (biome != null && predicate.test(biome)) return true;
+        }
+        return false;
     }
 
     /**

@@ -16,6 +16,8 @@ import static moe.lymia.simplecavebiomes.world.BiomeColorCacheClasses.MAX_ENTRY_
 
 /**
  * Replaces the implementation of BiomeColorCache with one derived from MC 1.20.4
+ *
+ * Everything here is an overwrite because, uh... This amounts to a class replacement.
  */
 @Mixin(BiomeColorCache.class)
 public class BiomeColorCacheHook {
